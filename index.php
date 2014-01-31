@@ -176,6 +176,7 @@ if (isset($_POST['msname'])) {
     $new_module->addToZip($new_module->createFile($new_module->msname . '.xml', $new_module->generateXml()));
     $new_module->addToZip($new_module->createFile($new_module->msname . '.php', $new_module->generateMainPhp()));
     $new_module->addToZip($new_module->createFile('helper.php', $new_module->generateHelperPhp()));
+	$new_module->addToZip($new_module->createFile('index.html', '<html><body></body></html>'));
     $new_module->generateTmplFolder();
     $new_module->generateLangFolder();
     $new_module->createAndSaveZip();
