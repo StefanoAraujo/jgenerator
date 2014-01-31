@@ -49,7 +49,7 @@ class JmoduleCreator {
         $php_content = array();
         $php_content [] = "<?php";
         $php_content [] = "defined('_JEXEC') or die;";
-        $php_content [] = "class ' . $this->mhelpername . ' ";
+        $php_content [] = "class ". $this->mhelpername " ";
         $php_content [] = '{';
         $php_content [] = 'public static function getItems($params)';
         $php_content [] = '{';
