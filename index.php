@@ -28,6 +28,8 @@ class JmoduleCreator {
         $this->mauthorurl = $_POST['mauthorurl'];
         $this->mcopyright = $_POST['mcopyright'];
         $this->mlicense = $_POST['mlicense'];
+        $this->params_names = $_POST['params_names'];
+        $this->params_labels = $_POST['params_labels'];
         $this->mhelpername = ucfirst(trim(str_replace('_', '', $this->msname))) . 'Helper';
     }
 
@@ -53,6 +55,13 @@ class JmoduleCreator {
         $php_content [] = '{';
         $php_content [] = 'public static function getItems($params)';
         $php_content [] = '{';
+        $php_content [] = '/*$db = JFactory::getDbo();';
+        $php_content [] = '$query = $db->getQuery(true);';
+        $php_content [] = '$query->select("*");';
+        $php_content [] = '$query->from("`#__content`");';
+        $php_content [] = '$query->where("`id`<> 1");';
+        $php_content [] = '$db->setQuery($query);';
+        $php_content [] = 'return = $db->loadObjectList();*/';
         $php_content [] = 'return null;	';
         $php_content [] = '}';
         $php_content [] = '}';
@@ -84,13 +93,23 @@ class JmoduleCreator {
         <language tag="en-GB">language/en-GB/en-GB.' . $this->msname . '.ini</language>
         <language tag="en-GB">language/en-GB/en-GB.' . $this->msname . '.sys.ini</language>
 	</languages>';
-        $xml_content [] = '<config>
-		<fields name="params">
-			<fieldset name="basic">
-			<field name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="PARAMMODULECLASSSUFFIX" />
-			</fieldset>			
-		</fields>
-	</config>';
+        if (sizeof($this->params_names))
+        {
+            $xml_content [] = '<config>';
+            $xml_content [] = '<fields name="params">';
+            $xml_content [] = '<fieldset name="basic">';
+            foreach ($this->params_names as $k=> $param_name)
+            {
+                if ($param_name)
+                {
+                    $xml_content [] = '<field name="'.$param_name.'" type="text" default="" label="'.$this->params_labels[$k].'" description="" />';
+                }
+            }
+            $xml_content [] = '</fieldset>';
+            $xml_content [] = '</fields>';
+            $xml_content [] = '</config>';
+        }
+
         $xml_content [] = '</extension>';
         $xml_str = implode("\r\n", $xml_content);
         return $xml_str;
@@ -141,7 +160,18 @@ class JmoduleCreator {
         $php_content = array();
         $php_content [] = "<?php";
         $php_content [] = "defined('_JEXEC') or die;";
-        $php_content [] = "";
+        $php_content [] = "?>";
+        $php_content [] = '<div class="<?php echo $moduleclass_sfx ?>">';
+        $php_content [] = "<?php";
+        $php_content [] = '/*if (sizeof($items))';
+        $php_content [] = '{';
+        $php_content [] = '            foreach ($items as $item)';
+        $php_content [] = '  {';
+        $php_content [] = '        echo "<div>".$item->id."</div>';
+        $php_content [] = '  }';
+        $php_content [] = '}*/';
+        $php_content [] = "?>";
+        $php_content [] = "</div>";
         $php_str = implode("\r\n", $php_content);
        
         $this->addToZip($this->createFile('tmpl/default.php', $php_str));
@@ -235,6 +265,21 @@ if (isset($_POST['msname'])) {
                     <td>License:</td>
                     <td><input class="form-control" type="text" value="GNU" name="mlicense" size="45" /></td>
                 </tr>
+             <tr>
+                   <td>
+                       J! module params (text):
+                 </td>
+                   <td>
+                        <div>
+                            <input type="text" class="form-horizontal" name="params_names[]" value="moduleclass_sfx"/>
+                            <input type="text" class="form-horizontal" name="params_labels[]" value="Module class"/>
+                        </div>
+                        <div>
+                            <input type="text" class="form-horizontal" name="params_names[]" value=""/>
+                            <input type="text" class="form-horizontal" name="params_labels[]" value=""/>
+                        </div>
+                   </td>
+               </tr>
             </table>
             <button class="btn btn-primary btn-lg" type="submit" >Generate new module</button>
         </div>
