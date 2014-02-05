@@ -18,7 +18,7 @@ class JmoduleCreator {
     public $zipfiles = array();
 
     function __construct() {
-        $this->msname = $_POST['msname'];
+        $this->msname = $_POST['sname'];
         $this->mname = $_POST['mname'];
         $this->mcreationdate = $_POST['mcreationdate'];
         $this->mversion = $_POST['mversion'];
@@ -201,10 +201,10 @@ class JmoduleCreator {
 
 }
 
-if (isset($_POST['msname'])) {
-    $new_module = new JmoduleCreator();
-    $new_module->addToZip($new_module->createFile($new_module->msname . '.xml', $new_module->generateXml()));
-    $new_module->addToZip($new_module->createFile($new_module->msname . '.php', $new_module->generateMainPhp()));
+if (isset($_POST['sname'])) {
+    $new_module = new JcomponentCreator();
+    $new_module->addToZip($new_module->createFile($new_module->sname . '.xml', $new_module->generateXml()));
+    $new_module->addToZip($new_module->createFile($new_module->sname . '.php', $new_module->generateMainPhp()));
     $new_module->addToZip($new_module->createFile('helper.php', $new_module->generateHelperPhp()));
 	$new_module->addToZip($new_module->createFile('index.html', '<html><body></body></html>'));
     $new_module->generateTmplFolder();
@@ -221,7 +221,7 @@ if (isset($_POST['msname'])) {
         <title>J! module creator</title>
     </head>
     <body>
-        <form method="post" action="index.php" name="subform"  class="form"/>
+        <form method="post" action="module.php" name="subform"  class="form"/>
         <div class="jumbotron"> 
             <h1>J! module creator:</h1>
             <table width="50%" class="table table-striped table-hover">
