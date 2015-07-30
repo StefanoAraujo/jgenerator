@@ -18,7 +18,7 @@ class JmoduleCreator {
     public $zipfiles = array();
 
     function __construct() {
-        $this->msname = $_POST['sname'];
+        $this->msname = $_POST['msname'];
         $this->mname = $_POST['mname'];
         $this->mcreationdate = $_POST['mcreationdate'];
         $this->mversion = $_POST['mversion'];
@@ -201,10 +201,10 @@ class JmoduleCreator {
 
 }
 
-if (isset($_POST['sname'])) {
-    $new_module = new JcomponentCreator();
-    $new_module->addToZip($new_module->createFile($new_module->sname . '.xml', $new_module->generateXml()));
-    $new_module->addToZip($new_module->createFile($new_module->sname . '.php', $new_module->generateMainPhp()));
+if (isset($_POST['msname'])) {
+    $new_module = new JModuleCreator();
+    $new_module->addToZip($new_module->createFile($new_module->msname . '.xml', $new_module->generateXml()));
+    $new_module->addToZip($new_module->createFile($new_module->msname . '.php', $new_module->generateMainPhp()));
     $new_module->addToZip($new_module->createFile('helper.php', $new_module->generateHelperPhp()));
 	$new_module->addToZip($new_module->createFile('index.html', '<html><body></body></html>'));
     $new_module->generateTmplFolder();
