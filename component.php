@@ -1,8 +1,33 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+/*
+################################################################################
+#                              J! Component Creator                            #
+################################################################################
+# Class Name: JComponentCreator                                                #
+# File-Release-Date:  2015/09/04                                               #
+#==============================================================================#
+# Author: Max Stemplevski                                                      #
+# Site:                                                                        #
+# Twitter: @stemax                                                             #
+# Copyright 2014 - All Rights Reserved.                                        #
+################################################################################
+*/
+/* Licence
+ * #############################################################################
+ * | This program is free software; you can redistribute it and/or             |
+ * | modify it under the terms of the GNU General var License                  |
+ * | as published by the Free Software Foundation; either version 2            |
+ * | of the License, or (at your option) any later version.                    |
+ * |                                                                           |
+ * | This program is distributed in the hope that it will be useful,           |
+ * | but WITHOUT ANY WARRANTY; without even the implied warranty of            |
+ * | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the              |
+ * | GNU General var License for more details.                                 |
+ * |                                                                           |
+ * +---------------------------------------------------------------------------+
+ */
 
-class JcomponentCreator {
+class JComponentCreator {
 
     public $sname = null;
     public $name = null;
@@ -35,9 +60,9 @@ class JcomponentCreator {
         $php_content = array();
         $php_content [] = "<?php";
         $php_content [] = "defined('_JEXEC') or die;";
-        $php_content [] = 'if (!JFactory::getUser()->authorise("core.manage", "'.$this->sname.'")) {';
-        $php_content [] = 'return JError::raiseWarning(404, JText::_("JERROR_ALERTNOAUTHOR"));';
-        $php_content [] = '}';
+        $php_content [] = '     if (!JFactory::getUser()->authorise("core.manage", "'.$this->sname.'")) {';
+        $php_content [] = '         return JError::raiseWarning(404, JText::_("JERROR_ALERTNOAUTHOR"));';
+        $php_content [] = '     }';
         $php_content [] = 'jimport("joomla.application.component.controller");';
         $php_content [] = '$controller = JControllerLegacy::getInstance("'.$this->compname.'");';
         $php_content [] = '$controller->execute(JRequest::getCmd("task"));';
@@ -114,11 +139,11 @@ class JcomponentCreator {
         $xml_content [] = '<folder>views</folder>';
         $xml_content [] = '</files>';
 
-        $xml_content [] = '<menu view="">'.ucwords($this->name).'</menu>';
+        $xml_content [] = '<menu link="option='.$this->sname.'" >'.$this->sname.'</menu>';
 
         $xml_content [] = '<languages>';
-        $xml_content [] = '<language tag="en-GB">languages/en-GB.'.$this->compname.'.ini</language>';
-        $xml_content [] = '<language tag="en-GB">languages/en-GB.'.$this->compname.'.sys.ini</language>';
+        $xml_content [] = '<language tag="en-GB">languages/en-GB.'.$this->sname.'.ini</language>';
+        $xml_content [] = '<language tag="en-GB">languages/en-GB.'.$this->sname.'.sys.ini</language>';
         $xml_content [] = '</languages>';
 
         $xml_content [] = '</administration>';
@@ -203,8 +228,8 @@ class JcomponentCreator {
         $this->addToZip($this->createFile("admin/views/".$this->compname.'/index.html', '<html><body></body></html>'));
         $this->addToZip($this->createFile("admin/views/".$this->compname.'/tmpl/index.html', '<html><body></body></html>'));
         $this->addToZip($this->createFile("admin/views/".$this->compname.'/tmpl/default.php', "<?php defined('_JEXEC') or die;"));
-        $this->addToZip($this->createFile('languages/en-GB.'.$this->compname.'.ini', ''));
-        $this->addToZip($this->createFile('languages/en-GB.'.$this->compname.'.sys.ini', strtoupper($this->compname).'="'.(ucwords($this->name)).'"'));
+        $this->addToZip($this->createFile('languages/en-GB.'.$this->sname.'.ini', strtoupper($this->sname).'="'.(ucwords($this->name)).'"'));
+        $this->addToZip($this->createFile('languages/en-GB.'.$this->sname.'.sys.ini', strtoupper($this->sname).'="'.(ucwords($this->name)).'"'));
 
         $php_content = array();
         $php_content [] = "<?php";
@@ -214,6 +239,7 @@ class JcomponentCreator {
         $php_content [] = '{';
         $php_content [] = 'function display($tpl = null) ';
         $php_content [] = '{';
+        $php_content [] = '  JToolbarHelper::title(JText::_("'.(strtoupper($this->sname)).'"), "info");';
         $php_content [] = '  parent::display($tpl);';
         $php_content [] = '}';
         $php_content [] = '}';
@@ -239,8 +265,8 @@ class JcomponentCreator {
 
 }
 
-if (isset($_POST['sname'])) {
-    $new_component = new JcomponentCreator();
+if (isset($_POST['sname']) && $_POST['name']) {
+    $new_component = new JComponentCreator();
     $new_component->addToZip($new_component->createFile($new_component->compname . '.xml', $new_component->generateXml()));
     $new_component->addToZip($new_component->createFile( 'script.php', $new_component->generateInstallerScript()));
     $new_component->addToZip($new_component->createFile('index.html', '<html><body></body></html>'));
@@ -255,23 +281,25 @@ if (isset($_POST['sname'])) {
 ?>
 <html>
     <head>
-        <link rel="stylesheet" href="style/css/bootstrap.min.css">
-        <link rel="stylesheet" href="style/css/bootstrap-theme.min.css">
-        <script src="style/js/bootstrap.min.js"></script>
-        <title>J! component creator</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <title>J! Component Creator</title>
     </head>
     <body>
         <form method="post" action="component.php" name="subform"  class="form"/>
-        <div class="jumbotron"> 
-            <h1>J! component creator:</h1>
+        <div class="jumbotron navbar-form">
+
+            <div class="container"> <div class="page-header"><h1>J! Component Creator:</h1></div>
             <table width="50%" class="table table-striped table-hover">
                 <tr>
                     <td>System name of component:</td>
-                    <td><input class="form-control" type="text" value="com_" name="sname" size="45" /></td>
+                    <td><input class="form-control required" type="text" value="com_" name="sname" size="45" /></td>
                 </tr>
                 <tr>
                     <td>Title(Name) of component:</td>
-                    <td><input class="form-control" type="text" value="" name="name" size="45" /></td>
+                    <td><input class="form-control required" type="text" value="" name="name" size="45" /></td>
                 </tr>
                 <tr>
                     <td>CreationDate:</td>
@@ -309,6 +337,7 @@ if (isset($_POST['sname'])) {
                 </tr>
             </table>
             <button class="btn btn-primary btn-lg" type="submit" >Generate new component</button>
+            </div>
         </div>
     </form>
         <div class="btn btn-primary btn-xs pull-right " disabled="true">Created by SMT</div>

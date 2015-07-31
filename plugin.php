@@ -184,8 +184,10 @@ if (isset($_POST['sname'])) {
                     <td>plg_
                         <select name="ptype">
                             <option value="system">system</option>
-                            <option value="user">user</option>
                             <option value="content">content</option>
+                            <option value="user">user</option>
+							<option value="search">search</option>
+							<option value="search">authentication</option>
                         </select>
                         _
                         <input class="form-control2" type="text" value="" name="sname" size="45" /></td>
