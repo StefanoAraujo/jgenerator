@@ -202,7 +202,11 @@ class JmoduleCreator {
 }
 
 if (isset($_POST['msname'])) {
+<<<<<<< HEAD
+    $new_module = new JModuleCreator();
+=======
     $new_module = new JmoduleCreator();
+>>>>>>> fdb8ce07bac46db7df6685647c3931432fabd8f6
     $new_module->addToZip($new_module->createFile($new_module->msname . '.xml', $new_module->generateXml()));
     $new_module->addToZip($new_module->createFile($new_module->msname . '.php', $new_module->generateMainPhp()));
     $new_module->addToZip($new_module->createFile('helper.php', $new_module->generateHelperPhp()));
